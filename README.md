@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: white;
+      font-family: 'Comic Neue', sans-serif;
+      color: #333;
+      padding: 20px;
+      margin: 0;
+      max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #popup {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.3s ease-out;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+    }
+    #popup.hidden {
+      display: none;
+    }
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 0 10px;
+    }
+    header img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 15px;
+      object-fit: cover;
+      border: 2px solid #FFD1DC;
+      margin-bottom: 10px;
+    }
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      text-align: center;
+    }
+    .countdown {
+      color: #FF69B4;
+      font-weight: bold;
+    }
+    .section {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #FFD1DC;
+      border-radius: 12px;
+      color: #000;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: none;
+      font-family: 'Comic Neue', sans-serif;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: #FFD1DC;
+      cursor: pointer;
+      font-family: 'Comic Neue', bold 700, sans-serif;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .save-btn {
+      margin-top: 10px;
+      padding: 8px 15px;
+      background-color: white;
+      border: 1px solid #FFD1DC;
+      cursor: pointer;
+      border-radius: 6px;
+      font-family: 'Comic Neue', sans-serif;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .save-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    #sadFace {
+      text-align: center;
+      margin-top: 50px;
+      font-family: 'Comic Sans MS';
+      font-size: 24px;
+      color: #000000;
+      padding: 0 20px;
+    }
+    #sadFace h2 {
+      font-size: 72px;
+      margin-bottom: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .section {
+        padding: 15px;
+      }
+      header img {
+        width: 70px;
+        height: 70px;
+      }
+      #sadFace h2 {
+        font-size: 60px;
+      }
+    }
+    @media (max-width: 480px) {
+      header img {
+        width: 60px;
+        height: 60px;
+      }
+      #sadFace h2 {
+        font-size: 48px;
+      }
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div id="popup">
+  <h2>Hi, Do you want to know what's in this websayt?</h2>
+  <button id="yesBtn">Yes</button>
+  <button id="noBtn">No</button>
+</div>
+<main id="mainContent" class="hidden">
+  <header>
+    <img src="chi.jpg" alt="Photo of Christine Ann (Chi)">
+    <div class="info">
+      <div><strong>Christine Ann (Chi)</strong></div>
+      <div>August 7, 2008</div>
+      <div class="countdown" id="birthdayCountdown">Loading countdown...</div>
+    </div>
+  </header>
+  <section class="section">
+    <h3>Message for Chi</h3>
+    <p id="message">Hello Chi! I know you've been feeling down so I decided to make this for you kasi ewan ko, bored lang ako, ganon. Anyway, I hope you regain your energy and that bright spirit of yours. Don't worry, no need to rush everything, just like what I always say! Hindi ko na alam sasabihin jahshsajhahja. Always here for you, take care!</p>
+  </section>
+  <section class="section">
+    <h3>How do you feel todeeeii? u can vent !</h3>
+    <textarea id="response" placeholder="You can tell me anything! I may or may not make basa"></textarea>
+    <button class="save-btn" id="saveBtn">Save Answer</button>
+    <p id="saveConfirm" style="color: green;"></p>
+  </section>
+</main>
+<div id="sadFace" class="hidden">
+  <h2>:(</h2>
+  <p>Ok, kalimutan m nlng aqu</p>
+</div>
+<script>
+  // Wait for the DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get all elements
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const popup = document.getElementById("popup");
+    const mainContent = document.getElementById("mainContent");
+    const sadFace = document.getElementById("sadFace");
+    const saveBtn = document.getElementById("saveBtn");
+    const response = document.getElementById("response");
+    const saveConfirm = document.getElementById("saveConfirm");
+    
+    // Yes button click handler
+    yesBtn.addEventListener('click', function() {
+      // Fade out popup
+      popup.style.opacity = "0";
+      
+      // After transition, hide popup and show main content
+      setTimeout(function() {
+        popup.classList.add("hidden");
+        mainContent.classList.remove("hidden");
+        loadResponse();
+      }, 300);
+    });
+    
+     // No button click handler
+    noBtn.addEventListener('click', function() {
+      // Fade out popup
+      popup.style.opacity = "0";
+      
+      // After transition, hide popup and show sad face
+      setTimeout(function() {
+        popup.classList.add("hidden");
+        sadFace.classList.remove("hidden");
+      }, 300);
+    });
+    
+    // Save button click handler
+    saveBtn.addEventListener('click', function() {
+      const responseText = response.value.trim();
+      
+      if (responseText === "") {
+        saveConfirm.innerText = "You can vent hirrr!";
+      } else {
+        // Save to localStorage
+        localStorage.setItem('chi_response', responseText);
+        saveConfirm.innerText = "Answer saveeeeddd! tenchuuuu :)";
+        
+        // Clear the textarea after saving
+        response.value = "";
+      }
+    });
+    
+    // Load saved response if available
+    function loadResponse() {
+      const savedResponse = localStorage.getItem('chi_response');
+      if (savedResponse) {
+        response.value = savedResponse;
+      }
+    }
+    
+    // Update birthday countdown
+    function updateCountdown() {
+      const bday = new Date("August 7, 2025");
+      const today = new Date();
+      const diff = bday - today;
+      
+      if (diff < 0) {
+        document.getElementById("birthdayCountdown").innerText = "🎉 Happy Birthday, Chi!";
+        return;
+      }
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      document.getElementById("birthdayCountdown").innerText = `${days} day(s) left until your birthday! 🎂`;
+    }
+    
+    // Call updateCountdown when page loads
+    updateCountdown();
+  });
+</script>
+</body>
+</html>
